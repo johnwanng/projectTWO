@@ -52,7 +52,7 @@ and cw.country = rc.country_full;
 create view worldcup_country_goals_scored_and_conceded as
 select country,  total_goal_scored/world_cup_appearances avg_goals_per_world_cup,total_goals_conceded/world_cup_appearances avg_conceded_goals_per_world_cup,total_goal_scored,total_goals_conceded,world_cup_appearances
 from 
-	(select country, sum(goals_scored) total_goal_scored,sum(goals_conceded) total_goals_conceded, count(distinct year) world_cup_appearances
+	(select country, sum(goals_scored) total_goal_scored,sum(goals_conceded) total_goals_conceded, count(distinct year) world_cup_appearances, count(distinct matchid) match_appearances
 	 from (
 		select home_team_name country,home_team_goals goals_scored,away_team_goals goals_conceded,year
 		from worldcupmatches a
