@@ -1,3 +1,7 @@
+select * from worldcup_host_winners;
+
+select * from worldcup_winners_and_ranks;
+
 create view worldcup_host_winners as
  (select 
 	(select count(0) from worldcups where country = winner) host_is_winner,
@@ -6,7 +10,32 @@ create view worldcup_host_winners as
 	(select count(0) from worldcups where country = fourth) host_is_fourth,
 	(select count(0) from worldcups where (country != winner) and (country != runners_up) 
 	 and (country != third) and (country != fourth))  not_first_second_third_fourth);
-	 
+
+
+create view worldcup_winners_and_ranks as
+with min_match_dates as (
+select to_date(min_match_date,'DD Mon YYYY') min_match_date, year from (
+	select min(datetime) min_match_date,year from worldcupmatches a
+	where year >= 1994
+	group by year) a),
+max_rank_date as (
+	select max(wcr.rank_date) max_rank_date, mmd.year,mmd.min_match_date  from worldcupranking wcr, min_match_dates mmd
+	where extract(year from wcr.rank_date) >= 1994 and wcr.rank_date <= mmd.min_match_date
+	group by mmd.min_match_date,mmd.year),
+rank_countries as (
+	select r.rank world_ranking, r.country_full,r.country_abrv, r.confederation, r.rank_date, mr.year, mr.min_match_date 
+	from worldcupranking r, max_rank_date mr where r.rank_date = mr.max_rank_date),
+top_four_winners as	(
+	select year,country host,winner country,1 cup_position from worldcups
+	 union
+	 select year,country,runners_up,2 from worldcups
+	 union
+	 select year,country, third,3 from worldcups
+	 union
+	 select year,country, fourth,4 from worldcups)
+select cw.*,rc.world_ranking,rc.confederation,rc.rank_date,rc.min_match_date from top_four_winners cw, rank_countries rc where cw.year = rc.year
+and cw.country = rc.country_full;
+
 select * from worldcups;
 
 select * from worldcupmatches where datetime = '07 July 1974 - 16:00 '; 
@@ -43,16 +72,9 @@ to_date(datetime,'dd mon yyyy') = '1930-097-13';
 
 CAST(datetime AS DATE) = '1930-07-13' ;
 
-with min_match_dates as (
-select to_date(min_match_date,'DD Mon YYYY') min_match_date, year from (
-	select min(datetime) min_match_date,year from worldcupmatches a
-	where year >= 1994
-	group by year) a
 
-select wcr.rank_date from worldcupranking wc, min_match_dates mmd
-where wcr.year >= 1994 
-and wcr.rank 
-
+select * from worldcups;
+select * from worldcupranking;
 
 select TO_DATE(part_date,'DD Mon YYYY') part_data_is_date,a.* from  
   (select substr(datetime,1,11) part_date,a.* from  worldcupmatches a) a;
