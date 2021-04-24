@@ -2,6 +2,17 @@ select * from worldcup_host_winners;
 
 select * from worldcup_winners_and_ranks;
 
+select * from worldcup_top_four_winners;
+
+--select * from worldcup_country_goals_scored_and_conceded;
+
+select * from worldcup_best_performers;
+
+select * from worldcup_best_perfomers_goals_scored_and_conceded;
+
+select * from worldcup_all_countries_goals_scored_and_conceded; 
+
+
 create view worldcup_host_winners as
  (select 
 	(select count(0) from worldcups where country = winner) host_is_winner,
@@ -10,6 +21,15 @@ create view worldcup_host_winners as
 	(select count(0) from worldcups where country = fourth) host_is_fourth,
 	(select count(0) from worldcups where (country != winner) and (country != runners_up) 
 	 and (country != third) and (country != fourth))  not_first_second_third_fourth);
+
+create view worldcup_top_four_winners as	
+	(select year,country host,winner country,1 cup_position from worldcups
+	 union
+	 select year,country,runners_up,2 from worldcups
+	 union
+	 select year,country, third,3 from worldcups
+	 union
+	 select year,country, fourth,4 from worldcups)
 
 
 create view worldcup_winners_and_ranks as
@@ -24,17 +44,164 @@ max_rank_date as (
 	group by mmd.min_match_date,mmd.year),
 rank_countries as (
 	select r.rank world_ranking, r.country_full,r.country_abrv, r.confederation, r.rank_date, mr.year, mr.min_match_date 
-	from worldcupranking r, max_rank_date mr where r.rank_date = mr.max_rank_date),
-top_four_winners as	(
-	select year,country host,winner country,1 cup_position from worldcups
-	 union
-	 select year,country,runners_up,2 from worldcups
-	 union
-	 select year,country, third,3 from worldcups
-	 union
-	 select year,country, fourth,4 from worldcups)
-select cw.*,rc.world_ranking,rc.confederation,rc.rank_date,rc.min_match_date from top_four_winners cw, rank_countries rc where cw.year = rc.year
+	from worldcupranking r, max_rank_date mr where r.rank_date = mr.max_rank_date)
+select cw.*,rc.world_ranking,rc.confederation,rc.rank_date,rc.min_match_date from worldcup_top_four_winners cw, rank_countries rc where cw.year = rc.year
 and cw.country = rc.country_full;
+
+
+create view worldcup_country_goals_scored_and_conceded as
+select country,  total_goal_scored/world_cup_appearances avg_goals_per_world_cup,total_goals_conceded/world_cup_appearances avg_conceded_goals_per_world_cup,total_goal_scored,total_goals_conceded,world_cup_appearances
+from 
+	(select country, sum(goals_scored) total_goal_scored,sum(goals_conceded) total_goals_conceded, count(distinct year) world_cup_appearances
+	 from (
+		select home_team_name country,home_team_goals goals_scored,away_team_goals goals_conceded,year
+		from worldcupmatches a
+		union
+		select away_team_name country,away_team_goals goals_scored,home_team_goals goals_conceded,year
+		from worldcupmatches a 
+	 )  a
+	 group by country) a;
+
+create view worldcup_best_perfomers_goals_scored_and_conceded as
+select distinct a.*,b.num_of_world_cup_winners,b.num_of_world_cup_runners_up,b.num_of_world_cup_third,b.num_of_world_cup_fourth
+from worldcup_country_goals_scored_and_conceded a,worldcup_best_performers b
+where a.country = b.country;
+
+
+select * from worldcup_best_performers;
+
+create view worldcup_all_countries_goals_scored_and_conceded as
+select distinct a.*,b.num_of_world_cup_winners,b.num_of_world_cup_runners_up,b.num_of_world_cup_third,b.num_of_world_cup_fourth
+from worldcup_country_goals_scored_and_conceded a
+LEFT JOIN worldcup_best_performers b
+on a.country = b.country;
+
+
+select * from worldcup_best_performers;
+
+
+create view worldcup_best_performers as
+	select w.country,min(w.cup_position) best_worlk_cup_position,
+	(select count(0) from worldcup_top_four_winners ww where ww.country = w.country and ww.cup_position = 1) num_of_world_cup_winners,
+	(select count(0) from worldcup_top_four_winners ww where ww.country = w.country and ww.cup_position = 2) num_of_world_cup_runners_up,
+	(select count(0) from worldcup_top_four_winners ww where ww.country = w.country and ww.cup_position = 3) num_of_world_cup_third,
+	(select count(0) from worldcup_top_four_winners ww where ww.country = w.country and ww.cup_position = 4) num_of_world_cup_fourth
+	from worldcup_top_four_winners w group by w.country;
+
+
+select * from worldcup_top_four_winners;
+
+select * from worldcups where runners_up = 'Argentina';
+
+select * from worldcups;
+
+select *
+--distinct roundid,matchid,year,home_team_name,home_team_goals,away_team_name,away_team_goals
+from worldcupmatches a where year = 1930 and (home_team_name = 'Uruguay' or away_team_name = 'Uruguay');
+
+select home_team_name country,sum(home_team_goals) total_score_goals,sum(away_team_goals) total_conceded_goals,
+	count(distinct year) world_cup_appearances
+from worldcupmatches a where year = 1930 and home_team_name = 'Yugoslavia'
+group by home_team_name;
+
+
+
+worldcupmatches
+
+6 + 1,
+6 + 1
+
+select home_team_name country,sum(home_team_goals) total_home_goals,sum(away_team_goals) total_away_goals,
+	count(distinct year) world_cup_appearances
+from worldcupmatches a where year = 1930 and home_team_name = 'Uruguay'
+group by home_team_name;
+
+
+with all_matches as (
+select distinct roundid,matchid,year,home_team_name,home_team_goals,away_team_name,away_team_goals
+from worldcupmatches)
+select country,world_cup_appearances,total_home_goals + total_away_goals total_world_cup_goals from (
+	select home_team_name country,sum(home_team_goals) total_home_goals,sum(away_team_goals) total_away_goals,
+	count(distinct year) world_cup_appearances
+	from all_matches group by home_team_name) a;
+
+;
+
+
+group by roundid,matchid having count(0) > 1;
+--roundid
+--matchid
+--year
+--home_team_name
+--away_team_name
+--home_team_goals
+--away_team_goals
+1930
+1934
+1938
+1950
+1954
+1958
+1962
+1966
+1970
+1974
+1978
+1982
+1986
+1990
+1994
+1998
+2002
+2006
+2010
+2014
+select * from worldcupmatches where stage = 'Final' order by 1;
+
+select year,home_team_name,sum(home_team) from worldcupmatches;
+
+select 
+Year,
+  Datetime,
+  Stage,
+  Stadium,
+  City,
+  Home_Team_Name,
+  Home_Team_Goals,
+  Away_Team_Goals,
+  Away_Team_Name,
+  Win_conditions,
+  Attendance,
+  Half_time_Home_Goals,
+  Half_time_Away_Goals,
+  Referee,
+  Assistant_1,
+  Assistant_2,
+  RoundID,
+  MatchID,
+  Home_Team_Initials,
+  Away_Team_Initials from worldcupmatches
+  group by Year,
+  Datetime,
+  Stage,
+  Stadium,
+  City,
+  Home_Team_Name,
+  Home_Team_Goals,
+  Away_Team_Goals,
+  Away_Team_Name,
+  Win_conditions,
+  Attendance,
+  Half_time_Home_Goals,
+  Half_time_Away_Goals,
+  Referee,
+  Assistant_1,
+  Assistant_2,
+  RoundID,
+  MatchID,
+  Home_Team_Initials,
+  Away_Team_Initials having count(0) > 1;
+
 
 select * from worldcups;
 
