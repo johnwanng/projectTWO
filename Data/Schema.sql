@@ -1,3 +1,66 @@
+create view worldcup_host_winners as
+ (select 
+	(select count(0) from worldcups where country = winner) host_is_winner,
+	(select count(0) from worldcups where country = runners_up) host_is_second,
+	(select count(0) from worldcups where country = third) host_is_third,
+	(select count(0) from worldcups where country = fourth) host_is_fourth,
+	(select count(0) from worldcups where (country != winner) and (country != runners_up) 
+	 and (country != third) and (country != fourth))  not_first_second_third_fourth);
+	 
+select * from worldcups;
+
+with min_match_dates as (
+select min(datetime) min_match_date,year from worldcupmatches 
+where year >= 1994
+group by year
+order by year)
+
+select * from min_match_dates;
+
+
+select max(rank_date) from worldcupranking where rank_date <= '1994-07-02';
+order by rank_date;	
+
+SELECT *
+FROM table
+WHERE dt::date = '2011-01-01' 
+
+--"02 Jul 1994 - 12:00 "	1994
+--"03 Jul 1998 - 16:30 "	1998
+--"01 Jun 2002 - 15:30 "	2002
+--"01 Jul 2006 - 17:00 "	2006
+--"02 Jul 2010 - 16:00 "	2010
+--"01 Jul 2014 - 13:00 "	2014
+
+select min(datetime),year from worldcupmatches 
+where year >= 1994
+group by year
+order by year;	
+
+1994
+1998
+2002
+2006
+2010
+2014
+
+
+
+
+select * from worldcupranking;
+
+create table worldcupranking
+(id	integer,
+ rank integer,
+ country_full varchar(100),
+ country_abrv varchar(100),
+ total_points integer,
+ previous_points integer,
+ rank_change integer,
+ confederation varchar(100),
+ rank_date date);
+
+
 select distinct country_name from (
 	select home_team_name country_name from worldcupmatches
 	union
