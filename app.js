@@ -70,4 +70,12 @@ d3.csv("worldcup_all_countries_goals_scored_and_conceded.csv", function(scoresDa
       .attr("cy", function(d) { return y(d.group); })
       .attr("r", "6")
       .style("fill", "#4C4082")
+
+   // Add a title   
+  svg.append("text")
+    .attr("x", (width / 2))             
+    .attr("y", 0 - (margin.top / 2))
+    .attr("text-anchor", "middle")  
+    .style("font-size", "16px") 
+    .text("Goals Scored Against Goals Conceded")
 ;
