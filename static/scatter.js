@@ -1,7 +1,3 @@
-
-function getAverage(value) {
-    }
-
 d3.csv("worldcup_winners_and_ranks.csv").then(function(Data) {
 
     var x = [], y = [], averages = [0,0,0,0], averageCount = [0,0,0,0];
@@ -30,8 +26,8 @@ function makePlotly( x, y, averages, averageCount ){
     for (i=0;i<averages.length;i++) {
         averages[i] = averages[i] / averageCount[i]
     }
-    console.log(x);
-    console.log(averages);
+    //console.log(x);
+    //console.log(averages);
     var trace1 = {
         x: x,
         y: y,
@@ -63,9 +59,10 @@ function makePlotly( x, y, averages, averageCount ){
         yaxis: {
           range: [1, 50]
         },
-        title: "Top 4 vs World Rank",
+        title: "Comparison of FIFA Rank against Top 4",
         xaxis: { title: "Top 4" },
-        yaxis: { title: "World Rank" }}
+        yaxis: { title: "FIFA Rank" }
+    }
       
       Plotly.newPlot('scatter', data, layout); 
 };

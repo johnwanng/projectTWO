@@ -1,0 +1,81 @@
+,year,host,country,cup_position,coach_team_initial,coach_country
+0,1930,Uruguay,Argentina,2,ARG,Argentina
+1,1930,Uruguay,USA,3,USA,USA
+2,1930,Uruguay,Uruguay,1,URU,Uruguay
+3,1930,Uruguay,Yugoslavia,4,YUG,Yugoslavia
+4,1934,Italy,Austria,4,AUT,Austria
+5,1934,Italy,Czechoslovakia,2,TCH,Czechoslovakia
+6,1934,Italy,Germany,3,GER,Germany
+7,1934,Italy,Italy,1,ITA,Italy
+8,1938,France,Brazil,3,BRA,Brazil
+9,1938,France,Hungary,2,HUN,Hungary
+10,1938,France,Italy,1,ITA,Italy
+11,1938,France,Sweden,4,HUN,Hungary
+12,1950,Brazil,Brazil,2,BRA,Brazil
+13,1950,Brazil,Spain,4,ESP,Spain
+14,1950,Brazil,Sweden,3,ENG,England
+15,1950,Brazil,Uruguay,1,URU,Uruguay
+16,1954,Switzerland,Austria,3,AUT,Austria
+17,1954,Switzerland,Germany FR,1,GER,Germany
+18,1954,Switzerland,Hungary,2,HUN,Hungary
+19,1954,Switzerland,Uruguay,4,URU,Uruguay
+20,1958,Sweden,Brazil,1,BRA,Brazil
+21,1958,Sweden,France,3,FRA,France
+22,1958,Sweden,Germany FR,4,GER,Germany
+23,1958,Sweden,Sweden,2,ENG,England
+24,1962,Chile,Brazil,1,BRA,Brazil
+25,1962,Chile,Chile,3,CHI,Chile
+26,1962,Chile,Czechoslovakia,2,TCH,Czechoslovakia
+27,1962,Chile,Yugoslavia,4,YUG,Yugoslavia
+28,1966,England,England,1,ENG,England
+29,1966,England,Germany FR,2,GER,Germany
+30,1966,England,Portugal,3,BRA,Brazil
+31,1966,England,Soviet Union,4,URS,Soviet Union
+32,1970,Mexico,Brazil,1,BRA,Brazil
+33,1970,Mexico,Germany FR,3,GER,Germany
+34,1970,Mexico,Italy,2,ITA,Italy
+35,1970,Mexico,Uruguay,4,URU,Uruguay
+36,1974,Germany,Brazil,4,BRA,Brazil
+37,1974,Germany,Germany,1,GER,Germany
+38,1974,Germany,Netherlands,2,NED,Netherlands
+39,1974,Germany,Poland,3,POL,Poland
+40,1978,Argentina,Argentina,1,ARG,Argentina
+41,1978,Argentina,Brazil,3,BRA,Brazil
+42,1978,Argentina,Italy,4,ITA,Italy
+43,1978,Argentina,Netherlands,2,AUT,Austria
+44,1982,Spain,France,4,FRA,France
+45,1982,Spain,Germany FR,2,GER,Germany
+46,1982,Spain,Italy,1,ITA,Italy
+47,1982,Spain,Poland,3,POL,Poland
+48,1986,Mexico,Argentina,1,ARG,Argentina
+49,1986,Mexico,Belgium,4,BEL,Belgium
+50,1986,Mexico,France,3,FRA,France
+51,1986,Mexico,Germany FR,2,GER,Germany
+52,1990,Italy,Argentina,2,ARG,Argentina
+53,1990,Italy,England,4,ENG,England
+54,1990,Italy,Germany FR,1,GER,Germany
+55,1990,Italy,Italy,3,ITA,Italy
+56,1994,USA,Brazil,1,BRA,Brazil
+57,1994,USA,Bulgaria,4,BUL,Bulgaria
+58,1994,USA,Italy,2,ITA,Italy
+59,1994,USA,Sweden,3,SWE,Sweden
+60,1998,France,Brazil,2,BRA,Brazil
+61,1998,France,Croatia,3,BIH,Bosnia and Herzegovina
+62,1998,France,France,1,FRA,France
+63,1998,France,Netherlands,4,NED,Netherlands
+64,2002,Korea/Japan,Brazil,1,BRA,Brazil
+65,2002,Korea/Japan,Germany,2,GER,Germany
+66,2002,Korea/Japan,Korea Republic,4,NED,Netherlands
+67,2002,Korea/Japan,Turkey,3,TUR,Turkey
+68,2006,Germany,France,2,FRA,France
+69,2006,Germany,Germany,3,GER,Germany
+70,2006,Germany,Italy,1,ITA,Italy
+71,2006,Germany,Portugal,4,BRA,Brazil
+72,2010,South Africa,Germany,3,GER,Germany
+73,2010,South Africa,Netherlands,2,NED,Netherlands
+74,2010,South Africa,Spain,1,ESP,Spain
+75,2010,South Africa,Uruguay,4,URU,Uruguay
+76,2014,Brazil,Argentina,2,ARG,Argentina
+77,2014,Brazil,Brazil,4,BRA,Brazil
+78,2014,Brazil,Germany,1,GER,Germany
+79,2014,Brazil,Netherlands,3,NED,Netherlands

@@ -1,4 +1,4 @@
-var hostPerformance = ["Winner", "Runner Ups", "Third", "Fourth"];
+var hostPerformance = ["Winner", "Runner Up", "Third", "Fourth"];
 
 // Use d3.csv() to fetch data from samples.csv file
 // Incoming data is internally referred to as incomingData
@@ -27,9 +27,9 @@ d3.csv("worldcup_host_winners.csv").then(function(Data) {
      
      // Define the plot layout
      var layout = {
-       title: "Host Country vs Frequency in Top 4",
-       xaxis: { title: "Host Performance" },
-       yaxis: { title: "Frequency" }
+       title: "Frequency of Host Country Finishing in Top 4"
+       //xaxis: { title: "Host Performance" },
+       //yaxis: { title: "Frequency" }
      };
      
      // Plot the chart to a div tag with id "bar-plot"

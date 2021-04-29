@@ -1,7 +1,227 @@
+create view testcoach as
+with a as (
+	select a.year,a.host,a.country,a.cup_position,a.home_team_initials, max(matchid) matchid
+	from (
+		select a.year,a.host,a.country,a.cup_position,b.home_team_initials, max(b.matchid) matchid
+		from worldcup_top_four_winners a, worldcupmatches b 
+		where a.year = b.year and a.country = b.home_team_name
+		group by a.year,a.host,a.country,a.cup_position,b.home_team_initials
+		union 
+		select a.year,a.host,a.country,a.cup_position,b.away_team_initials, max(b.matchid) 
+		from worldcup_top_four_winners a, worldcupmatches b 
+		where a.year = b.year and a.country = b.away_team_name
+		group by a.year,a.host,a.country,a.cup_position,b.away_team_initials) a
+	group by a.year,a.host,a.country,a.cup_position,a.home_team_initials),
+b as(
+	select b.matchid,b.coach_name,b.team_initials from a, worldcupplayers b where 
+		a.matchid = b.matchid and a.home_team_initials = b.team_initials 
+		group by b.matchid,b.coach_name,b.team_initials),
+coach_stat1 as	(
+	select a.*,b.coach_name, substr(b.coach_name,position('(' in b.coach_name) + 1,3) coach_team_initial
+	from a, b where a.matchid = b.matchid and a.home_team_initials = b.team_initials)
+select year, host, country, cup_position, case when home_team_initials = 'FRG' THEN 'GER' ELSE home_team_initials end home_team_initials, matchid, coach_name, case when coach_team_initial = 'FRG' THEN 'GER' ELSE coach_team_initial end coach_team_initial 
+from coach_stat1;
 
-update worldcupcountry_lat_long 
-set long = -102.5528
-where country = 'Mexico';
+
+select * from testcoach;
+
+select * from worldcupplayers where matchid = 2066;
+
+
+
+
+
+select * from worldcup_top_four_winners where year = 1974;
+select * from testcoach where year = 1974;
+
+with ac as
+(select coach_team_initial,country from
+	(select upper(substr(country,1,3)) coach_team_initial,country from worldcupcountry_lat_long
+	 union 
+	 select home_team_initials coach_team_initial,country from testcoach
+	 union
+	 select 'BIH','Bosnia and Herzegovina') a
+   where a.coach_team_initial != 'BOS' and country != 'China PR' and country != 'German DR' and country != 'Germany FR' and country != 'Iraq')
+select distinct a.year,a.host,a.country,a.cup_position,a.coach_team_initial, ac.country coach_country 
+from testcoach a, ac
+where a.coach_team_initial = ac.coach_team_initial order by 1;
+
+
+select * from worldcupcountry_lat_long order by 1;
+
+insert into worldcupcountry_lat_long
+values('Bosnia and Herzegovina',43.9159, 17.6791);
+
+
+select * from worldcup_winning_coaches;
+
+create view worldcup_winning_coaches as 
+with ac as
+(select coach_team_initial,country from
+	(select upper(substr(country,1,3)) coach_team_initial,country from worldcupcountry_lat_long
+	 union 
+	 select home_team_initials coach_team_initial,country from testcoach
+	 union
+	 select 'BIH','Bosnia and Herzegovina') a
+   where a.coach_team_initial != 'BOS' and country != 'China PR' and country != 'German DR' and country != 'Germany FR' and country != 'Iraq')
+select distinct a.year,a.host,a.country,a.cup_position,a.coach_team_initial, ac.country coach_country 
+from testcoach a, ac
+where a.coach_team_initial = ac.coach_team_initial;
+
+
+
+select tc.coach_team_initial,tc.cup_position,ac.country coach_country from testcoach tc, 
+(select upper(substr(country,1,3)) coach_team_initial,country from worldcupcountry_lat_long
+ union 
+ select home_team_initials coach_team_initial,country from testcoach
+ union
+ select 'BIH','Bosnia and Herzegovina') ac
+where tc.coach_team_initial = ac.coach_team_initial;
+
+
+select * from worldcup_winning_coaches;
+
+create view worldcup_winning_coaches2 as 
+with ac as
+(select coach_team_initial,country from
+	(select upper(substr(country,1,3)) coach_team_initial,country from worldcupcountry_lat_long
+	 union 
+	 select home_team_initials coach_team_initial,country from testcoach
+	 union
+	 select 'BIH','Bosnia and Herzegovina') a
+   where a.coach_team_initial != 'BOS' and country != 'China PR' and country != 'German DR' and country != 'Germany FR' and country != 'Iraq'),
+coach_stat2 as	(
+select distinct a.year,a.host,a.country,a.cup_position,a.coach_team_initial, ac.country coach_country 
+from testcoach a, ac
+where a.coach_team_initial = ac.coach_team_initial),
+coach_stat3 as	(
+	select aa.coach_country, 
+	 (select count(0) from coach_stat2 a where a.cup_position = 1 and a.coach_country = aa.coach_country group by a.coach_country) winner,
+	 (select count(0) from coach_stat2 a where a.cup_position = 2 and a.coach_country = aa.coach_country group by a.coach_country) runners_up,
+	 (select count(0) from coach_stat2 a where a.cup_position = 3 and a.coach_country = aa.coach_country group by a.coach_country) third,
+	 (select count(0) from coach_stat2 a where a.cup_position = 4 and a.coach_country = aa.coach_country group by a.coach_country) fourth
+	from coach_stat2 aa),
+coach_stat4 as	(
+	select coach_country, max(winner) winner,max(runners_up) runners_up, max(third) third, max(fourth) fourth 
+	from coach_stat3 group by coach_country)
+select coach_country,COALESCE(sum(winner),0) winner,COALESCE(sum(runners_up),0) runner,COALESCE(sum(third),0) third,COALESCE(sum(fourth),0) fourth from coach_stat4
+group by coach_country;	
+
+SELECT
+	COALESCE (null,1);
+
+select country,upper(substr(country,1,3)) team_initial from worldcupcountry_lat_long a where country not 
+in (select country from worldcup_top_four_winners)
+
+select * from worldcup_top_four_winners;
+51
+59
+select 10 + 12 + 14 + 15
+select 12 + 14 + 18	+ 15
+
+select substr('VYTLACIL Rudolf (TCH)',position('(' in 'VYTLACIL Rudolf (TCH)') + 1,3);
+
+select * from a;
+select b.matchid from b group by matchid having count(0) > 1;
+
+	
+	select * from a;
+	
+	select * from worldcupplayers where roundid = 405 limit 1;
+	
+select a.*,b.coach_name,b.team_initials from a, worldcupplayers b where 
+	a.matchid = b.matchid and a.home_team_initials = b.team_initials;
+	,
+b as(
+select b.matchid,b.coach_name,b.team_initials from a, worldcupplayers b where 
+	a.matchid = b.matchid and group by b.coach_name,b.team_initials,b.matchid)
+select b.matchid from b group by matchid having count(0) > 1;
+
+
+select a.*,b.coach_name,b.team_initials from a, worldcupplayers b where a.matchid = b.matchid;
+
+
+select * from worldcup_top_four_winners;
+where year = 1998 order by 1;
+
+
+stage = 'Semi-finals'
+away_team_name = 'Yugoslavia'
+order by 1;
+
+-- "Croatia"
+
+update worldcupmatches 
+set home_team_name = 'Germany'
+where year = 1974 and home_team_name = 'Germany FR';
+
+update worldcupmatches 
+set home_team_initials = 'GER'
+where year = 1974 and home_team_initials = 'FRG';
+
+update worldcupmatches 
+set away_team_name = 'Germany'
+where year = 1974 and away_team_name = 'Germany FR';
+
+update worldcupmatches 
+set away_team_initials = 'GER'
+where year = 1974 and away_team_initials = 'FRG';
+
+
+update worldcupplayers
+set team_initials = 'GER'
+where team_initials = 'FRG' and matchid = 2066;
+
+select * from worldcupplayers where team_initials = 'FRG' and matchid = 2066;
+
+select a.year,a.host,a.country,a.cup_position,b.home_team_initials, max(matchid) 
+from worldcup_top_four_winners a, worldcupmatches b 
+where a.year = b.year and a.country = b.home_team_name
+group by a.year,a.host,a.country,a.cup_position,b.home_team_initials 
+union
+select a.year,a.host,a.country,a.cup_position,b.home_team_initials, max(matchid) 
+from worldcup_top_four_winners a, worldcupmatches b 
+where a.year = b.year and a.country = b.away_team_name
+group by a.year,a.host,a.country,a.cup_position,b.home_team_initials 
+
+
+order by 1;
+
+select upper(substr(country,1,3)),a.* from worldcup_top_four_winners a 
+where  upper(substr(country,1,3)) not in (select home_team_initials from worldcupmatches)
+
+select a.year || a.host ||  a.country || a.cup_position
+from worldcup_top_four_winners a;
+
+with aa as (
+select a.year,a.host,a.country,a.cup_position,b.home_team_initials, max(matchid) 
+from worldcup_top_four_winners a, worldcupmatches b 
+where a.year = b.year and a.country = b.home_team_name
+group by a.year,a.host,a.country,a.cup_position,b.home_team_initials)
+
+select * from aa where 
+aa.year || aa.host ||  aa.country || aa.cup_position
+not in 
+(select a.year || a.host ||  a.country || a.cup_position from worldcup_top_four_winners a);
+
+
+
+
+
+
+
+select * from worldcupmatches where home_team_name = 'Netherlands';
+
+
+select * from worldcupmatches where home_team_initials not in 
+ (select distinct upper(substr(country,1,3)) from worldcup_top_four_winners);
+
+-- year 2010, "Uruguay"
+
+select max(matchid) from worldcupmatches where year = 2010 and (away_team_name = 'Uruguay' or home_team_name = 'Uruguay');
+select matchid,coach_name,team_initials from worldcupplayers where matchid = 300061512;
+
+
 
 select * from worldcupcountry_lat_long where country = 'Mexico';
 
@@ -14,11 +234,21 @@ select * from worldcup_host_winners;
 
 select * from worldcup_winners_and_ranks;
 
-select * from worldcup_top_four_winners;
+
+
+
+
+
+
+
 
 --select * from worldcup_country_goals_scored_and_conceded;
 
 select * from worldcup_best_performers;
+
+select * from worldcupplayers;
+
+
 
 select * from worldcups;
 
