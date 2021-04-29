@@ -1,3 +1,15 @@
+
+update worldcupcountry_lat_long 
+set long = -102.5528
+where country = 'Mexico';
+
+select * from worldcupcountry_lat_long where country = 'Mexico';
+
+select distinct host from worldcup_top_four_winners where 
+host not in (select country from worldcupcountry_lat_long);
+
+select * from worldcup_countries_lat_long where year = 1974;
+
 select * from worldcup_host_winners;
 
 select * from worldcup_winners_and_ranks;
@@ -8,10 +20,20 @@ select * from worldcup_top_four_winners;
 
 select * from worldcup_best_performers;
 
+select * from worldcups;
+
+update worldcups
+set winner = 'Germany'
+where year = 1974;
+
 select * from worldcup_best_perfomers_goals_scored_and_conceded;
 
 select * from worldcup_all_countries_goals_scored_and_conceded; 
 
+create or replace view worldcup_countries_lat_long as
+ (select a.*,b.lat cup_country_lat,b.long cup_country_long,c.lat host_country_lat,c.long host_country_long
+	from worldcup_top_four_winners a, worldcupcountry_lat_long b, worldcupcountry_lat_long c
+	where a.country = b.country and a.host = c.country);
 
 create view worldcup_host_winners as
  (select 
