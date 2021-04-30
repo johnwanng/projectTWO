@@ -11,7 +11,7 @@ var marker3;
 var marker4;
 var allMarkers = {};
 
-
+// function to remove circle marker 
 function removeMarker(marker)
 {
   if (marker != undefined) {
@@ -19,6 +19,7 @@ function removeMarker(marker)
   };
 }
 
+// function to return host color - blue if the given country happens to be the host of that world
 function hostColor(hostCountry,currentCountry,currentColor)
 {
   usedColor = currentColor;
@@ -27,6 +28,7 @@ function hostColor(hostCountry,currentCountry,currentColor)
   return usedColor;
 }
 
+// function to return Host Nation string if the given country happens to be the host of that world
 function hostCountry(hostCountry,currentCountry)
 {
   usedText = '';
@@ -35,100 +37,75 @@ function hostCountry(hostCountry,currentCountry)
   return usedText;
 }
 
+// function to draw the circle markers for Top 4 and Host nation of that world cup 
 function setCircleMarker(index)
  {
   
-  //for (i = index; i < index + 4 ; i++) {
-
     i = index;
+    // Remove all previous circle markers 
     removeMarker(hostmarker)
     removeMarker(marker1)
     removeMarker(marker2)
     removeMarker(marker3)
     removeMarker(marker4)
 
+    // Draw circle marker for Host nation
     hostmarker = L.circleMarker([worldCupData[i].host_country_lat,worldCupData[i].host_country_long], {
       fillOpacity: 0.75,
       color: "blue",
       fillColor: "blue",
-      // Adjust radius
-      radius: 12 //(get_radius(worldCupData[i].cup_position))
-      //radius: (worldCupData[i].cup_position / 0.02) * 1500
+      radius: 12 
     }).bindPopup("<h1>" + worldCupData[i].host + "(" + worldCupData[i].year + ")</h1> <hr> <h3>Host Nation</h3>").addTo(myMap);;
    
-
+    // Draw circle marker for Champion
     marker1 = L.circleMarker([worldCupData[i].cup_country_lat,worldCupData[i].cup_country_long], {
       fillOpacity: 0.75,
       color: hostColor(worldCupData[i].host,worldCupData[i].country,"Red"),
       fillColor: "Red",
-      // Adjust radius
-      radius: 12 //(get_radius(worldCupData[i].cup_position))
-      //radius: (worldCupData[i].cup_position / 0.02) * 1500
+      radius: 12 
     }).bindPopup("<h1>" + worldCupData[i].country + "(" + worldCupData[i].year + ")</h1> <hr> <h3>" + hostCountry(worldCupData[i].host,worldCupData[i].country) + "Position: " + worldCupData[i].cup_position + "</h3>").addTo(myMap);;
    
-
-    console.log(worldCupData[i].country);
-
     i = index + 1;
 
+    // Draw circle marker for runner up
     marker2 = L.circleMarker([worldCupData[i].cup_country_lat,worldCupData[i].cup_country_long], {
       fillOpacity: 0.75,
       color: hostColor(worldCupData[i].host,worldCupData[i].country,"Orange"),
       fillColor: "Orange",
-      // Adjust radius
-      radius: 12 //(get_radius(worldCupData[i].cup_position))
-      //radius: (worldCupData[i].cup_position / 0.02) * 1500
+      radius: 12 
     }).bindPopup("<h1>" + worldCupData[i].country + "(" + worldCupData[i].year + ")</h1> <hr> <h3>" + hostCountry(worldCupData[i].host,worldCupData[i].country) + "Position: " + worldCupData[i].cup_position + "</h3>").addTo(myMap);;
    
-    console.log(worldCupData[i].country);
 
     i = index + 2;
 
+    // Draw circle marker for third 
     marker3 = L.circleMarker([worldCupData[i].cup_country_lat,worldCupData[i].cup_country_long], {
       fillOpacity: 0.75,
       color: hostColor(worldCupData[i].host,worldCupData[i].country,"yellow"),
       fillColor: "yellow",
-      // Adjust radius
-      radius: 12 //(get_radius(worldCupData[i].cup_position))
-      //radius: (worldCupData[i].cup_position / 0.02) * 1500
+      radius: 12 
     }).bindPopup("<h1>" + worldCupData[i].country + "(" + worldCupData[i].year + ")</h1> <hr> <h3>" + hostCountry(worldCupData[i].host,worldCupData[i].country) + "Position: " + worldCupData[i].cup_position + "</h3>").addTo(myMap);;
-
-    console.log(worldCupData[i].country);
 
     i = index + 3;
 
+    // Draw circle marker for fourth
     marker4 = L.circleMarker([worldCupData[i].cup_country_lat,worldCupData[i].cup_country_long], {
       fillOpacity: 0.75,
       color: hostColor(worldCupData[i].host,worldCupData[i].country,"green"),
       fillColor: "green",
-      // Adjust radius
-      radius: 12 //(get_radius(worldCupData[i].cup_position))
-      //radius: (worldCupData[i].cup_position / 0.02) * 1500
+      radius: 12 
     }).bindPopup("<h1>" + worldCupData[i].country + "(" + worldCupData[i].year + ")</h1> <hr> <h3>" + hostCountry(worldCupData[i].host,worldCupData[i].country) + "Position: " + worldCupData[i].cup_position + "</h3>").addTo(myMap);;
-
-    console.log(worldCupData[i].country);
-
 }
 
-function get_radius(i)
-{
-  if (i == 1) return 18;
-  else if (i == 2) return 12;
-  else if (i == 3) return 8;
-  else if (i == 4) return 5;
-}
 
 
 //Function to detect a change in the list item
-function optionChanged(selectedYear) {
- 
+function optionChanged(selectedYear) { 
   currentSelectedYear = selectedYear;
-  
-  
-  
+
   //Find the index of the id array matching the value of the selectedYear
   ind = worldCupData.findIndex(x => x.year === parseInt(selectedYear));
-
+  // Draw circle markers
   setCircleMarker(ind);
     
 }
@@ -139,7 +116,6 @@ var myMap = L.map("map", {
   center: [15.5994, -28.6731],
   zoom: 2
 }); 
-
 
 L.tileLayer("https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}", {
   attribution: "© <a href='https://www.mapbox.com/about/maps/'>Mapbox</a> © <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a> <strong><a href='https://www.mapbox.com/map-feedback/' target='_blank'>Improve this map</a></strong>",
@@ -166,7 +142,7 @@ legend.onAdd = function(map) {
 
 legend.addTo(myMap); 
 
-
+// Read the country_lat_long file for country specific latitude and longitude information.
 d3.csv("static/country_lat_long.csv").then(function(Data) {
 
   worldCupData = Data;
@@ -180,6 +156,7 @@ d3.csv("static/country_lat_long.csv").then(function(Data) {
     data.host_country_long = +data.host_country_long;
    })
       
+    // populate distinct world cup year into the dropdown
     d3.select("#selDataset")
     .selectAll(null)
     .data(d3.map(Data, function(d){return d.year;}).keys()) //Return unqiue years
@@ -188,6 +165,7 @@ d3.csv("static/country_lat_long.csv").then(function(Data) {
     .text(function (d) { return d; }) // text showed in the menu
     .attr("value", function (d) { return d; }) // value kept in the menu
 
+    // Populate the default year - 2014 when it is first loaded
     optionChanged(currentSelectedYear);
     
   }).catch(function(error) {

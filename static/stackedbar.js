@@ -1,5 +1,9 @@
 d3.csv("worldcup_winning_coaches.csv").then(function(Data) {
 
+  // x1 will hold nationalities of coach that finished at position 1 
+  // y1 will hold position 1 values 
+  // x2 will hold nationalities of coach that finished at position 2
+  // y2 will hold position 2 values and so forth
   var x1 = [], y1 = [], x2 = [], y2 = [], x3 = [], y3 = [],x4 = [], y4 = [];
 
   // Cast the relevant data values to number that are  to be plotted on the chart
@@ -54,10 +58,9 @@ d3.csv("worldcup_winning_coaches.csv").then(function(Data) {
 
   var coachdata = [trace1, trace2, trace3,trace4];
 
-  console.log(coachdata);
+  //console.log(coachdata);
 
-
-  var layout = {title: 'Frequency of nationality of coach finishing in Top 4', barmode: 'stack'};
+  var layout = {title: 'Team Placement Based on Coach Nationality', barmode: 'stack'};
 
   Plotly.newPlot('stackedbar', coachdata, layout);
 

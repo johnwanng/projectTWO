@@ -26,16 +26,14 @@ app = Flask(__name__)
 @app.route('/', methods=['GET','POST'])       
 
 
-#  <script type="text/javascript" src="{{url_for('static', filename='config.js')}}"></script>
-#  <script type="text/javascript" src="{{url_for('static', filename='logic.js')}}"></script>
-#  <link rel="stylesheet" type="text/css" href="{{url_for('static', filename='style.css')}}">
-
-
+# Use the following command to kill process in case if the python command is hanging in the background
 # ps -fA | grep python
 # kill -9 <pid>
 
 def MainCode():
+  # connect to Postgres FIFA_projectTWO database
   connection = create_engine('postgresql://test:test@localhost/FIFA_projectTWO')
+  # make a connection
   session = Session(connection)
 
   # Prepare all the required csv files
@@ -57,7 +55,9 @@ def MainCode():
   worldcup_winning_coaches = psql.read_sql('select * from worldcup_winning_coaches', connection)
   worldcup_winning_coaches.to_csv('static/worldcup_winning_coaches.csv')
 
+  # Close the database connection session
   session.close()
+  # Redirect to the worldcup.html page
   return render_template("worldcup.html")
 
 

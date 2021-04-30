@@ -1,6 +1,6 @@
 var hostPerformance = ["Winner", "Runner Up", "Third", "Fourth"];
 
-// Use d3.csv() to fetch data from samples.csv file
+// Use d3.csv() to fetch data from worldcup_host_winners.csv file
 // Incoming data is internally referred to as incomingData
 d3.csv("worldcup_host_winners.csv").then(function(Data) {
 

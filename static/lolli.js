@@ -1,6 +1,6 @@
 
 // set the dimensions and margins of the graph
-var margin = {top: 10, right: 30, bottom: 30, left: 130},
+var margin = {top: 100, right: 30, bottom: 30, left: 130},
     svgWidth = 460 - margin.left - margin.right,
     svgHeight = 500 - margin.top - margin.bottom;
 
@@ -23,7 +23,18 @@ d3.csv("worldcup_best_perfomers_goals_scored_and_conceded.csv").then(function(Da
         data.avg_goals_per_world_cup = +data.avg_goals_per_world_cup;
         data.avg_conceded_goals_per_world_cup = +data.avg_conceded_goals_per_world_cup;
     })
- 
+
+    //console.log(0 - (margin.top / 2))
+    
+    // Add a title   
+    svg.append("text")
+        .attr("x", (svgWidth / 2))             
+        //.attr("y", 0 - (margin.top / 2))
+        .attr("y", -48)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "18px") 
+        .text("Goals Scored Against Goals Conceded") 
+
   // Add X axis
   var x = d3.scaleLinear()
     .domain([-1, 20])
@@ -40,7 +51,7 @@ d3.csv("worldcup_best_perfomers_goals_scored_and_conceded.csv").then(function(Da
   svg.append("g")
     .call(d3.axisLeft(y));
 
-  // Lines
+  // Lines for the country
   svg.selectAll("myline")
     .data(Data)
     .enter()
@@ -52,7 +63,7 @@ d3.csv("worldcup_best_perfomers_goals_scored_and_conceded.csv").then(function(Da
       .attr("stroke", "grey")
       .attr("stroke-width", "1px");
 
-  // Circles of variable 1
+  // Circles for avg_goals_per_world_cup
   svg.selectAll("mycircle")
     .data(Data)
     .enter()
@@ -62,7 +73,7 @@ d3.csv("worldcup_best_perfomers_goals_scored_and_conceded.csv").then(function(Da
       .attr("r", "6")
       .style("fill", "green");
 
-  // Circles of variable 2
+  // Circles for avg_conceded_goals_per_world_cup
   svg.selectAll("mycircle")
     .data(Data)
     .enter()
@@ -71,6 +82,10 @@ d3.csv("worldcup_best_perfomers_goals_scored_and_conceded.csv").then(function(Da
       .attr("cy", function(d) { return y(d.country); })
       .attr("r", "6")
       .style("fill", "red")
-      
+
+  svg.append("circle").attr("cx",250).attr("cy",130).attr("r", 6).style("fill", "Green")
+  svg.append("circle").attr("cx",250).attr("cy",160).attr("r", 6).style("fill", "Red")    
+  svg.append("text").attr("x", 260).attr("y", 130).text("Goal Scored").style("font-size", "10px").attr("alignment-baseline","middle")
+  svg.append("text").attr("x", 260).attr("y", 160).text("Goal Conceded").style("font-size", "10px").attr("alignment-baseline","middle")     
 })
 
